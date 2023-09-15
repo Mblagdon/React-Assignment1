@@ -1,5 +1,16 @@
 [
-    {"name": "Pizza", "servings": 4},
-    {"name": "Hamburger", "servings": 1}
-  ]
-  
+    {
+        "name": "Pizza",
+        "ingredients": "Dough, Tomato Sauce, Mozzarella, Toppings",
+        "directions": "Spread the dough, add sauce, add toppings, bake at 400°F for 15 minutes.",
+        "description": "A classic Italian dish with various toppings.",
+        
+    },
+    {
+        "name": "Hamburger",
+        "ingredients": "Bun, Patty, Lettuce, Tomato, Cheese",
+        "directions": "Cook the patty, assemble the burger with toppings.",
+        "description": "A classic American fast-food dish.",
+        
+    }
+]

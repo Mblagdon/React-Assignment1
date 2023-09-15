@@ -1,10 +1,10 @@
 import './App.css';
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Navigation from './components/Navigation';
-import Recipes from './components/Recipes';
-import AddRecipe from './components/AddRecipe';
-import recipeData from './data/recipeData.json';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navigation from './Navigation';
+import Recipes from './Recipes';
+import AddRecipe from './AddRecipe';
+import recipeData from './recipeData.json';
 
 function App() {
   const [recipes, setRecipes] = useState([]);
@@ -18,14 +18,10 @@ function App() {
       <div>
         <h1>Recipe Website</h1>
         <Navigation />
-        <Switch>
-          <Route path="/" exact>
-            <Recipes recipes={recipes} setRecipes={setRecipes} />
-          </Route>
-          <Route path="/add">
-            <AddRecipe />
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="/" element={<Recipes recipes={recipes} setRecipes={setRecipes} />} />
+          <Route path="/add" element={<AddRecipe recipes={recipes} setRecipes={setRecipes} />} />
+        </Routes>
       </div>
     </Router>
   );
