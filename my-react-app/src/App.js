@@ -12,7 +12,7 @@ function App() {
     .catch(e => console.log(e.message));
   }, []);
 
-  if (!recipes) return <div>Loading...</div>;
+  if (!recipes) return <div>Trying to load!</div>;
 
   return (
     <div>
@@ -21,10 +21,10 @@ function App() {
       <nav>
         <ul>
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/">Recipe Home Page</Link>
           </li>
           <li>
-            <Link to="/add-recipe">Add Recipe</Link>
+            <Link to="/add-recipe">Add Recipes Page</Link>
           </li>
         </ul>
       </nav>
