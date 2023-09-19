@@ -1,8 +1,5 @@
 import './App.css';
 import { useState, useEffect } from 'react';
-import Navigation from './Navigation';
-import Recipes from './Recipes';
-import AddRecipe from './AddRecipe';
 import recipeData from './recipeData.json';
 
 function Home() {
