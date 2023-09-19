@@ -1,30 +1,36 @@
 import './App.css';
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Navigation from './Navigation';
 import Recipes from './Recipes';
 import AddRecipe from './AddRecipe';
 import recipeData from './recipeData.json';
 
-function App() {
-  const [recipes, setRecipes] = useState([]);
-
-  useEffect(() => {
-    setRecipes(recipeData);
-  }, []);
-
+function Home() {
   return (
-    <Router>
-      <div>
-        <h1>Recipe Website</h1>
-        <Navigation />
-        <Routes>
-          <Route path="/" element={<Recipes recipes={recipes} setRecipes={setRecipes} />} />
-          <Route path="/add" element={<AddRecipe recipes={recipes} setRecipes={setRecipes} />} />
-        </Routes>
-      </div>
-    </Router>
+    <div>
+      <h1>Marcus' React Recipe App</h1>
+    </div>
   );
+}
+
+function recipes() {
+  return (
+    <div>
+      <h1>Recipes</h1>
+    </div>
+  );
+}
+
+function add() {
+  return (
+    <div>
+      <h1> Add Recipes</h1>
+    </div>
+  );
+}
+
+function App() {
+  return <Home />;
 }
 
 export default App;
