@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { Route, Link, Routes } from 'react-router-dom';
 import Recipe from './Recipe';
+import AddRecipeForm from './AddRecipeForm'; 
 
 function App() {
   const [recipes, setRecipes] = useState(null);
-  
+
   useEffect(() => {
     fetch("./recipeData.json")
       .then(response => response.json())
@@ -12,11 +13,17 @@ function App() {
       .catch(e => console.log(e.message));
   }, []);
 
+  // Function to remove a recipe
   const removeRecipe = (name) => {
     setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.name !== name));
   };
 
-  if (recipes == null) return;
+  // Function to add a new recipe
+  const addRecipe = (recipe) => {
+    setRecipes(prevRecipes => [...prevRecipes, recipe]);
+  };
+
+  if (recipes === null) return;
 
   return (
     <div>
@@ -34,12 +41,27 @@ function App() {
       </nav>
 
       <Routes>
-        <Route path="/" element={<div>{recipes.map(recipe => (<Recipe key={recipe.name} recipe={recipe} onRemove={removeRecipe} />))}</div>} />
-        <Route path="/add-recipe" element={<div>Add Recipe Form Goes Here</div>} />
+        <Route 
+          path="/" 
+          element={
+            <div>
+              {recipes.map(recipe => (
+                <Recipe 
+                  key={recipe.name} 
+                  recipe={recipe} 
+                  onRemove={removeRecipe} 
+                />
+              ))}
+            </div>
+          } 
+        />
+        <Route 
+          path="/add-recipe" 
+          element={<AddRecipeForm onAdd={addRecipe} />} 
+        />
       </Routes>
     </div>
   );
 }
 
 export default App;
-
