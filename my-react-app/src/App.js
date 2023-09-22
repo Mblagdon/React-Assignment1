@@ -4,12 +4,14 @@ import Recipe from './Recipe';
 import AddRecipeForm from './AddRecipeForm'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
+// React Bootstrap imports
 import { Container, Navbar, Nav, Row, Col } from 'react-bootstrap';
 
 function App() {
+  // State to hold list of recipes
   const [recipes, setRecipes] = useState(null);
-
+  
+  // Fetch recipes data
   useEffect(() => {
     fetch("./recipeData.json")
       .then(response => response.json())
@@ -17,18 +19,21 @@ function App() {
       .catch(e => console.log(e.message));
   }, []);
 
+  // Function to remove recipe by name
   const removeRecipe = (name) => {
     setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.name !== name));
   };
 
+  // Function to add a recipe
   const addRecipe = (recipe) => {
     setRecipes(prevRecipes => [...prevRecipes, recipe]);
   };
 
-  if (recipes === null) return null;
+  if (recipes === null) return;
 
   return (
     <Container>
+      {/* Navbar for navigation */}
       <Navbar bg="dark" variant="dark" expand="lg">
         <Navbar.Brand>Marcus' Recipe App</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -40,9 +45,11 @@ function App() {
         </Navbar.Collapse>
       </Navbar>
 
+      {/* Main content */}
       <Row className="mt-4">
         <Col>
           <Routes>
+            {/* Display the list of recipes */}
             <Route 
               path="/" 
               element={
@@ -57,6 +64,7 @@ function App() {
                 </div>
               } 
             />
+            {/* Form to add new recipes */}
             <Route 
               path="/add-recipe" 
               element={<AddRecipeForm onAdd={addRecipe} />} 
