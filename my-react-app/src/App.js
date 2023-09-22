@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react';
 import { Route, Link, Routes } from 'react-router-dom';
 import Recipe from './Recipe';
 import AddRecipeForm from './AddRecipeForm'; 
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
+import { Container, Navbar, Nav, Row, Col } from 'react-bootstrap';
 
 function App() {
   const [recipes, setRecipes] = useState(null);
@@ -13,54 +17,54 @@ function App() {
       .catch(e => console.log(e.message));
   }, []);
 
-  // Function to remove a recipe
   const removeRecipe = (name) => {
     setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.name !== name));
   };
 
-  // Function to add a new recipe
   const addRecipe = (recipe) => {
     setRecipes(prevRecipes => [...prevRecipes, recipe]);
   };
 
-  if (recipes === null) return;
+  if (recipes === null) return null;
 
   return (
-    <div>
-      <h1>Marcus' Recipe App</h1>
-      
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Recipe Home Page</Link>
-          </li>
-          <li>
-            <Link to="/add-recipe">Add Recipes Page</Link>
-          </li>
-        </ul>
-      </nav>
+    <Container>
+      <Navbar bg="dark" variant="dark" expand="lg">
+        <Navbar.Brand>Marcus' Recipe App</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="mr-auto">
+            <Nav.Link as={Link} to="/">Recipe Home Page</Nav.Link>
+            <Nav.Link as={Link} to="/add-recipe">Add Recipes Page</Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
 
-      <Routes>
-        <Route 
-          path="/" 
-          element={
-            <div>
-              {recipes.map(recipe => (
-                <Recipe 
-                  key={recipe.name} 
-                  recipe={recipe} 
-                  onRemove={removeRecipe} 
-                />
-              ))}
-            </div>
-          } 
-        />
-        <Route 
-          path="/add-recipe" 
-          element={<AddRecipeForm onAdd={addRecipe} />} 
-        />
-      </Routes>
-    </div>
+      <Row className="mt-4">
+        <Col>
+          <Routes>
+            <Route 
+              path="/" 
+              element={
+                <div>
+                  {recipes.map(recipe => (
+                    <Recipe 
+                      key={recipe.name} 
+                      recipe={recipe} 
+                      onRemove={removeRecipe} 
+                    />
+                  ))}
+                </div>
+              } 
+            />
+            <Route 
+              path="/add-recipe" 
+              element={<AddRecipeForm onAdd={addRecipe} />} 
+            />
+          </Routes>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
