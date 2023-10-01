@@ -1,10 +1,16 @@
 import express from 'express';
+import bodyParser from 'body=parser';
 
 const app = express();
 
-app.get('/hello', (req, res) => {
-    res.send('Hello!');
-});
+const port = 5000;
+
+let recipeData = [{name: "Pizza",}]
+
+app.get('/api/recipes', (req, res) => {
+    console.log("api/recipes is working")
+    res.json(recipeData);
+})
 
 app.listen(8000, () => {
     console.log('Server is listening on port 8000');
