@@ -7,7 +7,7 @@ const port = 5000;
 
 let recipeData = [{name: "Pizza",}]
 
-app.get('/api/recipes', (req, res) => {
+app.get('/api/Recipe', (req, res) => {
     console.log("api/recipes is working")
     res.json(recipeData);
 })

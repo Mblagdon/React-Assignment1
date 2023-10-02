@@ -1,0 +1,27 @@
+[
+    {   
+        "name": "Pizza",
+        "ingredients": "Dough, Tomato Sauce, Mozzarella, Toppings",
+        "directions": "Spread the dough, add sauce, add toppings, bake at 400°F for 15 minutes.",
+        "description": "Pizza is an italian dish, where you bake a round shaped dough with your toppings of choice, bake at a high temperature, and slice into triangles to serve",
+        "image": "/pizza1.jpg"
+        
+        
+    },
+    {   
+        "name": "Hamburger",
+        "ingredients": "Bun, Patty, Lettuce, Tomato, Cheese",
+        "directions": "Cook the patty, assemble the burger with toppings.",
+        "description": "A hamburger is a cooked patty of ground meat is placed between to buns, with toppings your toppings of choice",
+        "image": "/hamburger1.jpg"
+        
+    },
+    {
+
+        "name": "Meatloaf",
+        "ingredients": "~For the loaf: ground beef, an egg, an onion, milk, bread crumbs, salt, and pepper. ~For the sauce: ketchup, brown sugar, mustard",
+        "directions": "Mix the loaf ingredients together and put into a loaf pan. Mix the sauce ingredients and top the meatloaf. Baked on 350F for one hour.",
+        "description": "Meatloaf is ground meat, combined with other ingredients, is shaped into a loaf, topped with a sauce and then baked",
+        "image": "/meatloaf1.jpg"
+    }
+]
