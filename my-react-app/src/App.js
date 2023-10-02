@@ -9,11 +9,11 @@ import { Container, Navbar, Nav, Row, Col } from 'react-bootstrap';
 
 function App() {
   // State to hold list of recipes
-  const [recipes, setRecipes] = useState(null);
-  
-  // Fetch recipes data
+  const [recipes, setRecipes] = useState([]);
+
+  // Fetch recipes data from backend
   useEffect(() => {
-    fetch("./recipeData.json")
+    fetch("/api/recipes")
       .then(response => response.json())
       .then(setRecipes)
       .catch(e => console.log(e.message));
@@ -28,8 +28,6 @@ function App() {
   const addRecipe = (recipe) => {
     setRecipes(prevRecipes => [...prevRecipes, recipe]);
   };
-
-  if (recipes === null) return;
 
   return (
     <Container>
@@ -77,3 +75,4 @@ function App() {
 }
 
 export default App;
+

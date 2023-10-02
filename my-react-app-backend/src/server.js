@@ -1,17 +1,52 @@
 import express from 'express';
-import bodyParser from 'body=parser';
+import bodyParser from 'body-parser';
+import { MongoClient } from 'mongodb';
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
-const port = 5000;
+// Middleware to parse JSON and URL-encoded data
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-let recipeData = [{name: "Pizza",}]
+// Serve static files from the React build directory
+app.use(express.static(path.join(__dirname, '../build')));
 
-app.get('/api/Recipe', (req, res) => {
-    console.log("api/recipes is working")
-    res.json(recipeData);
-})
+const port = 4000;
 
-app.listen(8000, () => {
-    console.log('Server is listening on port 8000');
+// Serve React app for all non-API routes
+app.get(/^(?!\/api).+/, (req, res) => {
+    res.sendFile(path.join(__dirname, '../build/index.html'));
+});
+
+app.get('/api/recipes', async (req, res) => {
+    const client = new MongoClient("mongodb://127.0.0.1:27017");
+    await client.connect();
+    const db = client.db("my-react-app-db");
+
+    const recipes = await db.collection('recipes').find({}).toArray();
+    res.json(recipes);
+});
+
+
+app.post('/api/addRecipe', async (req, res) => {
+    const client = new MongoClient("mongodb://127.0.0.1:27017");
+    await client.connect();
+    const db = client.db("my-react-app-db");
+
+    const result = await db.collection("recipes").insertOne(req.body);
+    if (result.acknowledged) {
+        res.json({ message: "Recipe added successfully!" });
+    } else {
+        res.json({ message: "Error adding recipe." });
+    }
+});
+
+
+app.listen(port, () => {
+    console.log(`Server is listening on port ${port}`);
 });
