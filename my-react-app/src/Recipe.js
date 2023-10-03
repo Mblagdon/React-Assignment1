@@ -1,22 +1,7 @@
 import React from 'react';
-import { Image } from 'react-bootstrap'; // React Bootstrap components
-import { Card, Button } from 'react-bootstrap';
-import axios from 'axios';
+import { Image, Card, Button } from 'react-bootstrap';
 
 function Recipe({ recipe, onRemove }) {
-  
-  // Handle remove function
-  const handleRemove = (recipeName) => {
-    axios.post("/api/removeRecipe", { name: recipeName })
-      .then(response => {
-        if (response.data.message === "Recipe removed successfully!") {
-          onRemove(recipeName);  // Update the UI by removing the recipe from the list
-        } else {
-          console.error("Error removing recipe:", response.data.message);
-        }
-      })
-      .catch(error => console.error("Error:", error));
-  };
 
   return (
     <Card className="mb-4">
@@ -31,7 +16,31 @@ function Recipe({ recipe, onRemove }) {
         <Card.Text><strong>Description:</strong> {recipe.description}</Card.Text>
 
         {/* Button to remove recipe */}
-        <Button variant="danger" onClick={() => handleRemove(recipe.name)}>Remove</Button>
+        <Button variant="danger" onClick={() => {
+          var myHeaders = new Headers();
+          myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+          var urlencoded = new URLSearchParams();
+          urlencoded.append("recipeName", recipe.name);
+
+          var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: urlencoded,
+            redirect: 'follow'
+          };
+
+          fetch("/api/removeRecipe", requestOptions)
+          .then(response => response.json())
+          .then(result => {
+            if(result.message === "Recipe removed successfully!") {
+              onRemove(recipe.name);
+            } else {
+              console.error("Error removing recipe:", result.message);
+            }
+          })
+          .catch(error => console.log('error', error));
+        }}>Remove</Button>
       </Card.Body>
     </Card>
   );

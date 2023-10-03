@@ -1,5 +1,4 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import { MongoClient } from 'mongodb';
 import { fileURLToPath } from 'url';
 import path from 'path';
@@ -9,9 +8,11 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Middleware to parse JSON and URL-encoded data
+// Middleware to parse JSON
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+
+// Middleware to parse URL-encoded data
+app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from the React build directory
 app.use(express.static(path.join(__dirname, '../build')));
@@ -32,7 +33,6 @@ app.get('/api/recipes', async (req, res) => {
     res.json(recipes);
 });
 
-
 app.post('/api/addRecipe', async (req, res) => {
     const client = new MongoClient("mongodb://127.0.0.1:27017");
     await client.connect();
@@ -47,7 +47,7 @@ app.post('/api/addRecipe', async (req, res) => {
 });
 
 app.post('/api/removeRecipe', async (req, res) => {
-    const recipeName = req.body.name;  // Get the name from the request body
+    const recipeName = req.body.recipeName;
     const client = new MongoClient("mongodb://127.0.0.1:27017");
     await client.connect();
     const db = client.db("my-react-app-db");
@@ -59,8 +59,7 @@ app.post('/api/removeRecipe', async (req, res) => {
     } else {
       res.json({ message: "Error removing recipe or recipe not found." });
     }
-  }); 
-
+}); 
 
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
