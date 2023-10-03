@@ -3,6 +3,7 @@ import { Route, Link, Routes } from 'react-router-dom';
 import Recipe from './Recipe';
 import AddRecipeForm from './AddRecipeForm'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios';  
 
 // React Bootstrap imports
 import { Container, Navbar, Nav, Row, Col } from 'react-bootstrap';
@@ -13,16 +14,23 @@ function App() {
 
   // Fetch recipes data from backend
   useEffect(() => {
-    fetch("/api/recipes")
-      .then(response => response.json())
-      .then(setRecipes)
+    axios.get("/api/recipes")
+      .then(response => setRecipes(response.data))
       .catch(e => console.log(e.message));
   }, []);
 
   // Function to remove recipe by name
   const removeRecipe = (name) => {
-    setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.name !== name));
-  };
+    axios.delete(`/api/removeRecipe/${name}`)
+    .then(response => {
+        if (response.data.message === "Recipe removed successfully!") {
+            setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.name !== name));
+        } else {
+            console.error("Error removing recipe:", response.data.message);
+        }
+    })
+    .catch(error => console.error("Error:", error));
+};
 
   // Function to add a recipe
   const addRecipe = (recipe) => {
@@ -75,4 +83,5 @@ function App() {
 }
 
 export default App;
+
 

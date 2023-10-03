@@ -46,6 +46,21 @@ app.post('/api/addRecipe', async (req, res) => {
     }
 });
 
+app.post('/api/removeRecipe', async (req, res) => {
+    const recipeName = req.body.name;  // Get the name from the request body
+    const client = new MongoClient("mongodb://127.0.0.1:27017");
+    await client.connect();
+    const db = client.db("my-react-app-db");
+  
+    const result = await db.collection("recipes").deleteOne({ name: recipeName });
+  
+    if (result.deletedCount > 0) {
+      res.json({ message: "Recipe removed successfully!" });
+    } else {
+      res.json({ message: "Error removing recipe or recipe not found." });
+    }
+  }); 
+
 
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
