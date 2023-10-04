@@ -17,30 +17,32 @@ function Recipe({ recipe, onRemove }) {
 
         {/* Button to remove recipe */}
         <Button variant="danger" onClick={() => {
-          var myHeaders = new Headers();
-          myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+          console.log("Remove button clicked for recipe:", recipe.name);
+        var myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-          var urlencoded = new URLSearchParams();
-          urlencoded.append("recipeName", recipe.name);
+        var urlencoded = new URLSearchParams();
+        urlencoded.append("recipeName", recipe.name);
 
-          var requestOptions = {
+        var requestOptions = {
             method: 'POST',
             headers: myHeaders,
             body: urlencoded,
             redirect: 'follow'
-          };
+        };
 
-          fetch("/api/removeRecipe", requestOptions)
-          .then(response => response.json())
-          .then(result => {
+        fetch("/api/removeRecipe", requestOptions)
+        .then(response => response.json())
+        .then(result => {
             if (result.message === "Recipe removed successfully!") {
-              onRemove(recipe.name);
+                onRemove(recipe.name);
             } else {
-              console.error("Error removing recipe:", result.message);
+                console.error("Error removing recipe:", result.message);
             }
-          })
-          .catch(error => console.log('error', error));
-        }}>Remove</Button>
+        })
+        .catch(error => console.log('error', error));
+    }}>Remove</Button>
+
       </Card.Body>
     </Card>
   );

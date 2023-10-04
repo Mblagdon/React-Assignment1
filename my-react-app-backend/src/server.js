@@ -52,7 +52,7 @@ app.post('/api/removeRecipe', async (req, res) => {
     } else {
       res.json({ message: "Error removing recipe or recipe not found." });
     }
-}); 
+});
 
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
