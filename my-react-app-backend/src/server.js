@@ -19,16 +19,18 @@ const port = 4000;
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, path.join(__dirname, '..', 'uploads/'));
     },
     filename: (req, file, cb) => {
         cb(null, file.originalname);
     }
 });
 
+
 const upload = multer({ storage: storage });
 
-app.use('/uploads', express.static('uploads')); // Serve the uploaded images
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+ // Serve the uploaded images
 
 const connectToDB = async () => {
     const client = new MongoClient("mongodb://127.0.0.1:27017");
@@ -43,18 +45,23 @@ app.get('/api/recipes', async (req, res) => {
 });
 
 app.post('/api/addRecipe', upload.single('image'), async (req, res) => {
-    const db = await connectToDB();
-    const recipeData = req.body;
-    // If a file was uploaded, set the image path
-    if (req.file) {
-        recipeData.image = '/' + req.file.path;
-    }
-    const result = await db.collection("recipes").insertOne(recipeData);
-    if (result.acknowledged) {
-        res.json({ message: "Recipe added successfully!" });
-    } else {
-        res.json({ message: "Error adding recipe." });
-    }
+    try {
+        const db = await connectToDB();    
+        const recipeData = req.body;
+        // If a file was uploaded, set the image path
+        if (req.file) {
+            recipeData.image = '/' + req.file.path;
+        }
+        const result = await db.collection("recipes").insertOne(recipeData);
+        if (result.acknowledged) {
+            res.json({ message: "Recipe added successfully!" });
+        } else {
+            res.json({ message: "Error adding recipe." });
+        }
+    } catch (error) {
+        console.error("Error in /api/addRecipe:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+}
 });
 
 app.delete('/api/removeRecipe', async (req, res) => {
