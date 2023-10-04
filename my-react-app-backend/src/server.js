@@ -2,6 +2,7 @@ import express from 'express';
 import { MongoClient } from 'mongodb';
 import { fileURLToPath } from 'url';
 import path from 'path';
+import multer from 'multer';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,10 +15,20 @@ app.use(express.json());
 // Middleware to parse URL-encoded data
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static files from the React build directory
-app.use(express.static(path.join(__dirname, '../build')));
-
 const port = 4000;
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage });
+
+app.use('/uploads', express.static('uploads')); // Serve the uploaded images
 
 const connectToDB = async () => {
     const client = new MongoClient("mongodb://127.0.0.1:27017");
@@ -31,9 +42,14 @@ app.get('/api/recipes', async (req, res) => {
     res.json(recipes);
 });
 
-app.post('/api/addRecipe', async (req, res) => {
+app.post('/api/addRecipe', upload.single('image'), async (req, res) => {
     const db = await connectToDB();
-    const result = await db.collection("recipes").insertOne(req.body);
+    const recipeData = req.body;
+    // If a file was uploaded, set the image path
+    if (req.file) {
+        recipeData.image = '/' + req.file.path;
+    }
+    const result = await db.collection("recipes").insertOne(recipeData);
     if (result.acknowledged) {
         res.json({ message: "Recipe added successfully!" });
     } else {
@@ -41,7 +57,7 @@ app.post('/api/addRecipe', async (req, res) => {
     }
 });
 
-app.post('/api/removeRecipe', async (req, res) => {
+app.delete('/api/removeRecipe', async (req, res) => {
     console.log("Attempting to remove recipe with name:", req.body.recipeName);
     const db = await connectToDB();
     const result = await db.collection("recipes").deleteOne({ name: req.body.recipeName });
@@ -53,6 +69,9 @@ app.post('/api/removeRecipe', async (req, res) => {
       res.json({ message: "Error removing recipe or recipe not found." });
     }
 });
+
+// Serve static files from the React build directory
+app.use(express.static(path.join(__dirname, '../build')));
 
 app.listen(port, () => {
     console.log(`Server is listening on port ${port}`);

@@ -17,19 +17,16 @@ function Recipe({ recipe, onRemove }) {
 
         {/* Button to remove recipe */}
         <Button variant="danger" onClick={() => {
-          console.log("Remove button clicked for recipe:", recipe.name);
-        var myHeaders = new Headers();
-        myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-
-        var urlencoded = new URLSearchParams();
-        urlencoded.append("recipeName", recipe.name);
+          console.log("Remove button clicked for recipe:", recipe.name);        
 
         var requestOptions = {
-            method: 'POST',
-            headers: myHeaders,
-            body: urlencoded,
-            redirect: 'follow'
-        };
+          method: 'DELETE',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ recipeName: recipe.name })
+      };
+      
 
         fetch("/api/removeRecipe", requestOptions)
         .then(response => response.json())

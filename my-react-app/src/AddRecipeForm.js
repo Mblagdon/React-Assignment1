@@ -17,16 +17,27 @@ function AddRecipeForm({ onAdd }) {
     setNewRecipe(prevState => ({ ...prevState, [name]: value }));
   };
 
+  // Handle changes in file input
+  const handleFileChange = (e) => {
+    setNewRecipe(prevState => ({ ...prevState, image: e.target.files[0] }));
+  };
+
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const formData = new FormData();
+    formData.append('name', newRecipe.name);
+    formData.append('ingredients', newRecipe.ingredients);
+    formData.append('directions', newRecipe.directions);
+    formData.append('description', newRecipe.description);
+    if (newRecipe.image) {
+        formData.append('image', newRecipe.image);
+    }
+
     fetch("/api/addRecipe", {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newRecipe)
+        body: formData
     })
     .then(response => response.json())
     .then(data => {
@@ -37,12 +48,12 @@ function AddRecipeForm({ onAdd }) {
         }
     })
     .catch(error => console.error("Error:", error));
-};
+  };
 
   return (
     <Container>
-    {/* Form for adding a recipe */}
-      <Form onSubmit={handleSubmit}>
+      {/* Form for adding a recipe */}
+      <Form onSubmit={handleSubmit} encType="multipart/form-data">
         {/* Input for recipe name */}
         <Form.Group controlId="recipeName">
           <Form.Label>Name</Form.Label>
@@ -67,15 +78,10 @@ function AddRecipeForm({ onAdd }) {
           <Form.Control as="textarea" rows={3} name="description" value={newRecipe.description} onChange={handleChange} required />
         </Form.Group>
 
-        {/* Dropdown to select recipe image */}
+        {/* Input for recipe image */}
         <Form.Group controlId="recipeImage">
-          <Form.Label>Image</Form.Label>
-          <Form.Control as="select" name="image" value={newRecipe.image} onChange={handleChange}>
-            <option value="">Placeholder</option>
-            <option value="/pizza1.jpg">Pizza</option>
-            <option value="/hamburger1.jpg">Hamburger</option>
-            <option value="/meatloaf1.jpg">Meatloaf</option>
-          </Form.Control>
+            <Form.Label>Image</Form.Label>
+            <Form.Control type="file" name="image" onChange={handleFileChange} />
         </Form.Group>
 
         {/* Button to submit the form */}
@@ -86,4 +92,3 @@ function AddRecipeForm({ onAdd }) {
 }
 
 export default AddRecipeForm;
-
