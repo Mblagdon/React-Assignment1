@@ -14,6 +14,7 @@ app.use(express.json());
 
 // Middleware to parse URL-encoded data
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, '../build')));
 
 const port = 4000;
 
