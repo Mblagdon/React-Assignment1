@@ -24,7 +24,7 @@ function AddRecipeForm({ onAdd }) {
 
   // Handle form submission
   const handleSubmit = (e) => {
-    e.preventDefault();
+    e.preventDefault();    
 
     const formData = new FormData();
     formData.append('name', newRecipe.name);
