@@ -36,18 +36,20 @@ function AddRecipeForm({ onAdd }) {
     }
 
     fetch("/api/addRecipe", {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.message === "Recipe added successfully!") {
+      method: 'POST',
+      body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+      if (data.message === "Recipe added successfully!") {
+          // Assuming the backend responds with the image path
+          newRecipe.image = data.imagePath; 
           onAdd(newRecipe); // Update the local state
-        } else {
+      } else {
           console.error("Error adding recipe:", data.message);
-        }
-    })
-    .catch(error => console.error("Error:", error));
+      }
+  })
+  .catch(error => console.error("Error:", error));  
   };
 
   return (

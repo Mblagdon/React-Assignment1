@@ -51,14 +51,18 @@ app.post('/api/addRecipe', upload.single('image'), async (req, res) => {
         const recipeData = req.body;
         // If a file was uploaded, set the image path
         if (req.file) {
-            recipeData.image = '/' + req.file.path;
+            recipeData.image = '/uploads/' + path.basename(req.file.path);
         }
         const result = await db.collection("recipes").insertOne(recipeData);
         if (result.acknowledged) {
-            res.json({ message: "Recipe added successfully!" });
+            res.json({ 
+                message: "Recipe added successfully!",
+                imagePath: recipeData.image // Include the image path in the response
+            });
         } else {
             res.json({ message: "Error adding recipe." });
         }
+        
     } catch (error) {
         console.error("Error in /api/addRecipe:", error);
         res.status(500).json({ message: "Internal Server Error" });
