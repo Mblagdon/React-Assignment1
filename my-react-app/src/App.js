@@ -46,9 +46,9 @@ function App() {
   };
 
   return (
-    <Container>
+    <Container style={{ backgroundColor: 'lightblue', minHeight: '100vh' }}>
       {/* Navbar for navigation */}
-      <Navbar bg="dark" variant="dark" expand="lg">
+      <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
         <Navbar.Brand>Marcus' Recipe App</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -60,35 +60,36 @@ function App() {
       </Navbar>
 
       {/* Main content */}
-      <Row className="mt-4">
-        <Col>
-          <Routes>
-            {/* Display the list of recipes */}
-            <Route 
-              path="/" 
-              element={
-                <div>
-                  {recipes.map(recipe => (
-                    <Recipe 
-                      key={recipe.name} 
-                      recipe={recipe} 
-                      onRemove={removeRecipe} 
-                    />
-                  ))}
-                </div>
-              } 
-            />
-            {/* Form to add new recipes */}
-            <Route 
-              path="/add-recipe" 
-              element={<AddRecipeForm onAdd={addRecipe} />} 
-            />
-          </Routes>
-        </Col>
-      </Row>
+      <Routes>
+        {/* Display the list of recipes */}
+        <Route 
+          path="/" 
+          element={
+            <div>
+              {recipes.map(recipe => (
+                <Row key={recipe.name} className="mb-4">
+                  <Col>
+                    <Recipe recipe={recipe} onRemove={removeRecipe} />
+                  </Col>
+                </Row>
+              ))}
+            </div>
+          } 
+        />
+        {/* Form to add new recipes */}
+        <Route 
+          path="/add-recipe" 
+          element={
+            <Row>
+              <Col>
+                <AddRecipeForm onAdd={addRecipe} />
+              </Col>
+            </Row>
+          } 
+        />
+      </Routes>
     </Container>
   );
 }
 
 export default App;
-
