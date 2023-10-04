@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
-import axios from 'axios';
 
 function AddRecipeForm({ onAdd }) {
   // State to hold the forms input data
@@ -21,17 +20,24 @@ function AddRecipeForm({ onAdd }) {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-  axios.post("/api/addRecipe", newRecipe)
-      .then(response => {
-        const data = response.data;
+
+    fetch("/api/addRecipe", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newRecipe)
+    })
+    .then(response => response.json())
+    .then(data => {
         if (data.message === "Recipe added successfully!") {
           onAdd(newRecipe); // Update the local state
         } else {
           console.error("Error adding recipe:", data.message);
         }
-      })
-      .catch(error => console.error("Error:", error));
-  };
+    })
+    .catch(error => console.error("Error:", error));
+};
 
   return (
     <Container>

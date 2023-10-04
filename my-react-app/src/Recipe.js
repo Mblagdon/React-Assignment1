@@ -33,7 +33,7 @@ function Recipe({ recipe, onRemove }) {
           fetch("/api/removeRecipe", requestOptions)
           .then(response => response.json())
           .then(result => {
-            if(result.message === "Recipe removed successfully!") {
+            if (result.message === "Recipe removed successfully!") {
               onRemove(recipe.name);
             } else {
               console.error("Error removing recipe:", result.message);

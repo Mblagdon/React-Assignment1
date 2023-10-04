@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Route, Link, Routes } from 'react-router-dom';
 import Recipe from './Recipe';
-import AddRecipeForm from './AddRecipeForm'; 
+import AddRecipeForm from './AddRecipeForm';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import axios from 'axios';  
 
 // React Bootstrap imports
 import { Container, Navbar, Nav, Row, Col } from 'react-bootstrap';
@@ -14,23 +13,32 @@ function App() {
 
   // Fetch recipes data from backend
   useEffect(() => {
-    axios.get("/api/recipes")
-      .then(response => setRecipes(response.data))
-      .catch(e => console.log(e.message));
+    fetch("/api/recipes")
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then(data => setRecipes(data))
+      .catch(error => console.log(error.message));
   }, []);
 
   // Function to remove recipe by name
   const removeRecipe = (name) => {
-    axios.delete(`/api/removeRecipe/${name}`)
-    .then(response => {
-        if (response.data.message === "Recipe removed successfully!") {
-            setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.name !== name));
-        } else {
-            console.error("Error removing recipe:", response.data.message);
-        }
+    fetch(`/api/removeRecipe/${name}`, {
+      method: 'DELETE',
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.message === "Recipe removed successfully!") {
+        setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.name !== name));
+      } else {
+        console.error("Error removing recipe:", data.message);
+      }
     })
     .catch(error => console.error("Error:", error));
-};
+  };
 
   // Function to add a recipe
   const addRecipe = (recipe) => {
@@ -83,5 +91,4 @@ function App() {
 }
 
 export default App;
-
 

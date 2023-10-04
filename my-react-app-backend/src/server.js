@@ -19,25 +19,20 @@ app.use(express.static(path.join(__dirname, '../build')));
 
 const port = 4000;
 
-// Serve React app for all non-API routes
-app.get(/^(?!\/api).+/, (req, res) => {
-    res.sendFile(path.join(__dirname, '../build/index.html'));
-});
-
-app.get('/api/recipes', async (req, res) => {
+const connectToDB = async () => {
     const client = new MongoClient("mongodb://127.0.0.1:27017");
     await client.connect();
-    const db = client.db("my-react-app-db");
+    return client.db("my-react-app-db");
+}
 
+app.get('/api/recipes', async (req, res) => {
+    const db = await connectToDB();
     const recipes = await db.collection('recipes').find({}).toArray();
     res.json(recipes);
 });
 
 app.post('/api/addRecipe', async (req, res) => {
-    const client = new MongoClient("mongodb://127.0.0.1:27017");
-    await client.connect();
-    const db = client.db("my-react-app-db");
-
+    const db = await connectToDB();
     const result = await db.collection("recipes").insertOne(req.body);
     if (result.acknowledged) {
         res.json({ message: "Recipe added successfully!" });
@@ -47,13 +42,11 @@ app.post('/api/addRecipe', async (req, res) => {
 });
 
 app.post('/api/removeRecipe', async (req, res) => {
-    const recipeName = req.body.recipeName;
-    const client = new MongoClient("mongodb://127.0.0.1:27017");
-    await client.connect();
-    const db = client.db("my-react-app-db");
-  
-    const result = await db.collection("recipes").deleteOne({ name: recipeName });
-  
+    console.log("Attempting to remove recipe with name:", req.body.recipeName);
+    const db = await connectToDB();
+    const result = await db.collection("recipes").deleteOne({ name: req.body.recipeName });
+    console.log("Deletion result:", result);
+
     if (result.deletedCount > 0) {
       res.json({ message: "Recipe removed successfully!" });
     } else {
